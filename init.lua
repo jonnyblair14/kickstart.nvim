@@ -936,9 +936,10 @@ require('lazy').setup({
         -- for more info on folds see `:help folds`
         -- vim.wo.foldexpr = 'v:lua.vim.treesitter.foldexpr()'
         -- vim.wo.foldmethod = 'expr'
+        vim.wo.relativenumber = true
 
         -- check if treesitter indentation is available for this language, and if so enable it
-        -- in case there is no indent query, the indentexpr will fallback to the vim's built in one
+        -- check if treesitter indentation is available for this language, and if so enable it
         local has_indent_query = vim.treesitter.query.get(language, 'indents') ~= nil
 
         -- enables treesitter based indentation
