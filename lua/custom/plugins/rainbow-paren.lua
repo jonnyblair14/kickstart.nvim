@@ -1,16 +1,63 @@
+-- Rainbow Paraenthesis and inline colouring too
+
 return {
-	-- Auto Pairs
-	{
-		"windwp/nvim-autopairs"
-	},
+  {
+    "lukas-reineke/indent-blankline.nvim",
+    main = "ibl",
+    opts = function()
+      local highlight = {
+        "RainbowRed",
+        "RainbowYellow",
+        "RainbowBlue",
+        "RainbowOrange",
+        "RainbowGreen",
+        "RainbowViolet",
+        "RainbowCyan",
+      }
 
-	-- Indentation Highlighting
-	{
-		"lukas-reineke/indent-blankline.nvim",
-	},
+      local hooks = require("ibl.hooks")
 
-	-- Rainbow Highlighting
-	{
-		"HiPhish/nvim-ts-rainbow2",
-	},
+      hooks.register(hooks.type.HIGHLIGHT_SETUP, function()
+        vim.api.nvim_set_hl(0, "RainbowRed", { fg = "#E06C75" })
+        vim.api.nvim_set_hl(0, "RainbowYellow", { fg = "#E5C07B" })
+        vim.api.nvim_set_hl(0, "RainbowBlue", { fg = "#61AFEF" })
+        vim.api.nvim_set_hl(0, "RainbowOrange", { fg = "#D19A66" })
+        vim.api.nvim_set_hl(0, "RainbowGreen", { fg = "#98C379" })
+        vim.api.nvim_set_hl(0, "RainbowViolet", { fg = "#C678DD" })
+        vim.api.nvim_set_hl(0, "RainbowCyan", { fg = "#56B6C2" })
+      end)
+
+      vim.g.rainbow_delimiters = {
+        highlight = highlight,
+      }
+
+      return {
+        indent = {
+          char = "▏",
+        },
+        scope = {
+          highlight = highlight,
+        },
+        exclude = {
+          filetypes = {
+            "help",
+            "startify",
+            "dashboard",
+            "packer",
+            "neogitstatus",
+            "NvimTree",
+            "Trouble",
+          },
+          buftypes = {
+            "terminal",
+            "nofile",
+          },
+        },
+      }
+    end,
+  },
+
+  {
+    "HiPhish/rainbow-delimiters.nvim",
+  },
 }

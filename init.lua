@@ -478,7 +478,7 @@ require('lazy').setup({
       vim.keymap.set('n', '<leader>sn', function() builtin.find_files { cwd = vim.fn.stdpath 'config' } end, { desc = '[S]earch [N]eovim files' })
     end,
   },
-  
+
   {
     'nvim-neo-tree/neo-tree.nvim',
     branch = 'v3.x',
@@ -621,7 +621,7 @@ require('lazy').setup({
         -- But for many setups, the LSP (`ts_ls`) will work just fine
         -- ts_ls = {},
 
-        stylua = {}, -- Used to format Lua code
+        -- stylua = {}, -- Used to format Lua code
 
         -- Special Lua Config, as recommended by neovim help docs
         lua_ls = {
@@ -668,8 +668,18 @@ require('lazy').setup({
       local ensure_installed = vim.tbl_keys(servers or {})
       vim.list_extend(ensure_installed, {
         -- You can add other tools here that you want Mason to install
-      })
+        -- Formatters
+        'stylua',
+        'shfmt',
+        'yamlfmt',
+        'prettier',
+        'black',
+        'isort',
 
+        -- Linters
+        'shellcheck',
+        'ansible-lint',
+      })
       require('mason-tool-installer').setup { ensure_installed = ensure_installed }
 
       for name, server in pairs(servers) do
@@ -698,8 +708,12 @@ require('lazy').setup({
       format_on_save = function(bufnr)
         -- You can specify filetypes to autoformat on save here:
         local enabled_filetypes = {
-          -- lua = true,
-          -- python = true,
+          lua = true,
+          yaml = true,
+          json = true,
+          markdown = true,
+          sh = true,
+          python = true,
         }
         if enabled_filetypes[vim.bo[bufnr].filetype] then
           return { timeout_ms = 500 }
@@ -712,9 +726,14 @@ require('lazy').setup({
       },
       -- You can also specify external formatters in here.
       formatters_by_ft = {
+        lua = { 'stylua' },
+        yaml = { 'prettier' },
+        json = { 'prettier' },
+        markdown = { 'prettier' },
+        sh = { 'shfmt' },
+        python = { 'isort', 'black' },
         -- rust = { 'rustfmt' },
         -- Conform can also run multiple formatters sequentially
-        -- python = { "isort", "black" },
         --
         -- You can use 'stop_after_first' to run the first available formatter from the list
         -- javascript = { "prettierd", "prettier", stop_after_first = true },
@@ -815,27 +834,27 @@ require('lazy').setup({
     },
   },
 
---  { -- You can easily change to a different colorscheme.
---    -- Change the name of the colorscheme plugin below, and then
---    -- change the command in the config to whatever the name of that colorscheme is.
---    --
---    -- If you want to see what colorschemes are already installed, you can use `:Telescope colorscheme`.
---    'catppuccin/nvim',
---    priority = 1000, -- Make sure to load this before all the other start plugins.
---    config = function()
---      ---@diagnostic disable-next-line: missing-fields
---      require('catppuccin').setup {
---        styles = {
---          comments = { italic = false }, -- Disable italics in comments
---        },
---      }
---
---      -- Load the colorscheme here.
---      -- Like many other themes, this one has different styles, and you could load
---      -- any other, such as 'tokyonight-storm', 'tokyonight-moon', or 'tokyonight-day'.
---      vim.cmd.colorscheme 'catppuccin-macchiato'
---    end,
---  },
+  --  { -- You can easily change to a different colorscheme.
+  --    -- Change the name of the colorscheme plugin below, and then
+  --    -- change the command in the config to whatever the name of that colorscheme is.
+  --    --
+  --    -- If you want to see what colorschemes are already installed, you can use `:Telescope colorscheme`.
+  --    'catppuccin/nvim',
+  --    priority = 1000, -- Make sure to load this before all the other start plugins.
+  --    config = function()
+  --      ---@diagnostic disable-next-line: missing-fields
+  --      require('catppuccin').setup {
+  --        styles = {
+  --          comments = { italic = false }, -- Disable italics in comments
+  --        },
+  --      }
+  --
+  --      -- Load the colorscheme here.
+  --      -- Like many other themes, this one has different styles, and you could load
+  --      -- any other, such as 'tokyonight-storm', 'tokyonight-moon', or 'tokyonight-day'.
+  --      vim.cmd.colorscheme 'catppuccin-macchiato'
+  --    end,
+  --  },
 
   -- Highlight todo, notes, etc in comments
   {
@@ -888,28 +907,6 @@ require('lazy').setup({
 
       -- ... and there is more!
       --  Check out: https://github.com/nvim-mini/mini.nvim
-    end,
-  },
-
-  {
-    'stevearc/oil.nvim',
-    dependencies = { { 'echasnovski/mini.icons', opts = {} } },
-    config = function()
-      local oil = require 'oil'
-      oil.setup {
-        columns = { 'icon' },
-        keymaps = {
-          ['<C-l>'] = false,
-          ['<C-j>'] = false,
-          ['<M-h>'] = 'actions.select_split',
-        },
-        view_options = {
-          show_hidden = true,
-        },
-      }
-      
-      vim.keymap.set('n', '-', oil.open, { desc = 'Open parent directory with oil' })
-      vim.keymap.set('n', '<leader>o', oil.toggle_float)
     end,
   },
 
